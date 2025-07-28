@@ -18,6 +18,7 @@ def ReadFile(path,rls=False):
     return z
 
 def ReturnRels(RELS,file=False,lBYl=False):
+    global LEN1
     w = [ReadFile(ROOT+rel,True) for rel in RELS]
     print("-= START FEED =-")
     if lBYl:
