@@ -1,9 +1,9 @@
 # DesCode
 
-## How to Save Changes
+## How to Save Changes (Commit)
 
 1. Go to Source Control
-2. Click on dropdown next to commit
+2. Go to CHANGES > Changes > (file you want to commit)
 
 ## Basic Commands
 ```
