@@ -1,3 +1,4 @@
 # DesCode
 
-To push: git push -u origin main
+To push: type `git push -u origin main`
+
