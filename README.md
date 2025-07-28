@@ -25,3 +25,4 @@ Clone repo to local computer                  	git clone <REMOTE_URL>
 Fetch changes from remote repo	                git fetch origin
 Show all versions of the repo (log)	            git log
 ```
+
