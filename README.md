@@ -4,6 +4,11 @@
 
 1. Go to Source Control
 2. Go to CHANGES > Changes > (file you want to commit)
+3. Click on + icon that says "Stage Changes"
+4. Click on dropdown menu (v) next to "✓ Commit" button
+5. Click on "Commit & Push"
+6. Type a commit message
+7. Click on ✓ that says "Accept Commit Message" (on top right)
 
 ## Basic Commands
 ```
