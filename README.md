@@ -1,4 +1,11 @@
 # DesCode
+
+## How to Save Changes
+
+1. Go to Source Control
+2. Click on dropdown next to commit
+
+## Basic Commands
 ```
 Scenario	                                    Command
 Create a new local git repository:              git init
