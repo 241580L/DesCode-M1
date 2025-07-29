@@ -1,9 +1,14 @@
 # DesCode
 
-## How to Load (Do this only once)
+## How to Download (You should do this only once)
 1. Open an empty folder in VSC (File > Open Folder > 
 2. `git clone https://github.com/241580L/DesCode/`
 3. `git remote add origin https://github.com/241580L/DesCode/`
+
+## How to Load Changes
+1. `git fetch`
+2. On left tab, go to Source Control (below the Search button, or press Ctrl+Shift+G)
+3. ...
 
 ## How to Save Changes (Commit)
 **NOTE:** `git remote -v` to view remote connection (no response means you have no connection)
