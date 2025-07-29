@@ -105,6 +105,7 @@ function App() {
           <Container>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/home" element={<Home />} />
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/reviews/:id" element={<Review />} />
               <Route path="/addreview" element={<AddReview />} />
