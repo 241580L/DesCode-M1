@@ -1,7 +1,7 @@
 # DesCode
 
 ## How to Download (You should do this only once)
-1. Open an empty folder in VSC (File > Open Folder > 
+1. Open an empty folder in VSC (File > Open Folder > &lt;Folder Name>)
 2. `git clone https://github.com/241580L/DesCode/`
 3. `git remote add origin https://github.com/241580L/DesCode/`
 
@@ -21,6 +21,10 @@
 5. Click on "Commit & Push"
 6. Type a commit message
 7. Click on ✓ that says "Accept Commit Message" (on top right)
+
+**NOTE:**
+If you pressed the commit button, your changes are commited to the LR but not on Github.
+To save your changes to github, type the following:
 
 ##
 1. `git add`
