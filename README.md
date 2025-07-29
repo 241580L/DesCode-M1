@@ -3,8 +3,8 @@
 ## How to Download into Working Directory (You should do this only once)
 1. Open an empty folder in VSC (File > Open Folder > &lt;Folder Name>) **(Make sure folder is empty!)**
 2. Press Ctrl+` to open terminal
-3. Type `git clone https://github.com/241580L/DesCode/`
-4. Type `git remote add origin https://github.com/241580L/DesCode/`
+3. Type `git clone https://github.com/241580L/DesCode-M1/`
+4. Type `git remote add origin https://github.com/241580L/DesCode-M1/`
 
 ## How to Load Changes
 1. Type `git fetch`
