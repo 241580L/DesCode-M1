@@ -41,7 +41,7 @@ router.post("/register", async (req, res) => {
         res.json({ accessToken, user: userInfo, message: 'Registration successful!' });
     }
     catch (err) {
-        wiz(err,"Error while registering:\n")
+        wiz(err, "Error while registering:\n")
         return res.status(400).json({ message: mapYupErrors(err) });
     }
 });
@@ -81,7 +81,7 @@ router.post("/login", async (req, res) => {
         });
     }
     catch (err) {
-        wiz(err,"Error while logging in:\n")
+        wiz(err, "Error while logging in:\n")
         res.status(400).json({ errors: err.errors });
     }
 });
@@ -101,4 +101,19 @@ router.get("/auth", validateToken, (req, res) => {
     res.json({
         user: userInfo
     });
+});
+
+router.delete('/profile', validateToken, async (req, res) => {
+    try {
+        const user = await User.findOne({ where: { email: req.user.email, deleted: false } });
+        if (!user) return res.status(404).json({ message: "User not found." });
+
+        user.deleted = true;
+        await user.save();
+
+        res.json({ message: "User deleted successfully." });
+    } catch (err) {
+        wiz(err, "Error while deleting user:\n")
+        res.status(500).json({ message: "Failed to delete user." });
+    }
 });

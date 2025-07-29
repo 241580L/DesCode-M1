@@ -1,20 +1,28 @@
 // client/src/pages/AddReview.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Box, Button, Typography, TextField, Alert, LinearProgress } from '@mui/material';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import http from '../http';
 import StarRating from '../components/StarRating';
+import UserContext from '../contexts/UserContext';
 // visually display stars
 
 function AddReview() {
   const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   // ^ These three are react state hooks and tracks request status
   
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
   const formik = useFormik({
     initialValues: {
       title: "",

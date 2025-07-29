@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'review'
     });
 
-    ReviewReply.belongsTo(models.Admin, {
+    ReviewReply.belongsTo(models.User, {
       foreignKey: 'ReplierID',
       as: 'Replier'
     });

@@ -26,7 +26,7 @@ app.use("/file", fileRoute)
 
 const db = require('./models');
 if (require.main === module) { // Only listen if running directly (not imported in test)
-db.sequelize.sync() // removed { alter: true } because it generated username_2 to username_63.
+db.sequelize.sync({ alter: true }) // removed { alter: true } because it generated username_2 to username_63.
 // After all, using `db.sequelize.sync({ alter: true })` in production is highly discouraged.
     .then(() => {
         let port = process.env.APP_PORT;
