@@ -13,6 +13,16 @@
 ## How to Save Changes (Commit)
 **NOTE:** `git remote -v` to view remote connection (no response means you have no connection)
 
+## Using VSC:
+1. On left tab, go to Source Control (below the Search button, or press Ctrl+Shift+G)
+2. Go to CHANGES > Changes > (file you want to commit)
+3. Click on + icon that says "Stage Changes"
+4. Click on dropdown menu (v) next to "✓ Commit" button
+5. Click on "Commit & Push"
+6. Type a commit message
+7. Click on ✓ that says "Accept Commit Message" (on top right)
+
+##
 1. `git add`
 2. `git push origin main`
 
