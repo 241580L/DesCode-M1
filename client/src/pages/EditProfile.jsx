@@ -2,7 +2,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, TextField, Button, CircularProgress } from '@mui/material';
 import ConfirmModal from '../components/ConfirmModal';
+import { useFormik } from 'formik';
 import { ToastContainer, toast } from 'react-toastify';
+import * as yup from 'yup';
 import UserContext from '../contexts/UserContext';
 import http from '../http';
 
@@ -80,6 +82,8 @@ export default function EditProfile() {
         payload.currentPassword = formData.currentPassword;
         payload.newPassword = formData.newPassword;
       }
+
+
 
       const response = await http.put('/user/profile', payload);
       // response.data contains server response
