@@ -13,7 +13,8 @@
 ## How to Save Changes (Commit)
 **NOTE:** `git remote -v` to view remote connection (no response means you have no connection)
 
-1. `git push origin main`
+1. `git add`
+2. `git push origin main`
 
 ## Basic Commands
 ```
