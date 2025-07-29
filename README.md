@@ -8,7 +8,7 @@
 ## How to Load Changes
 1. `git fetch`
 2. On left tab, go to Source Control (below the Search button, or press Ctrl+Shift+G)
-3. ...
+3. Click on "Sync Changes" (The blue button with the arrows)
 
 ## How to Save Changes (Commit)
 **NOTE:** `git remote -v` to view remote connection (no response means you have no connection)
