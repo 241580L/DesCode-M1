@@ -1,9 +1,10 @@
 # DesCode
 
-## How to Download (You should do this only once)
+## How to Download into Working Directory (You should do this only once)
 1. Open an empty folder in VSC (File > Open Folder > &lt;Folder Name>) **(Make sure folder is empty!)**
-2. Type `git clone https://github.com/241580L/DesCode/`
-3. Type `git remote add origin https://github.com/241580L/DesCode/`
+2. Press Ctrl+` to open terminal
+3. Type `git clone https://github.com/241580L/DesCode/`
+4. Type `git remote add origin https://github.com/241580L/DesCode/`
 
 ## How to Load Changes
 1. Type `git fetch`
@@ -11,9 +12,8 @@
 3. Click on "Sync Changes" (The blue button with the arrows)
 
 ## How to Save Changes (Commit)
-**NOTE:** `git remote -v` to view remote connection (no response means you have no connection)
 
-## Using VSC:
+### Using VSC:
 1. On left tab, go to Source Control (below the Search button, or press Ctrl+Shift+G)
 2. Go to CHANGES > Changes > (file you want to commit)
 3. Click on + icon that says "Stage Changes"
@@ -22,16 +22,18 @@
 6. Type a commit message
 7. Click on ✓ that says "Accept Commit Message" (on top right)
 
-**NOTE:**
-If you pressed the commit button, your changes are commited to the LR but not on Github.
-To save your changes to github, perform the following steps:
-1. Click on "Sync Changes" (The blue button with the arrows)
-OR
-1. Type `git push origin main`
+**FYI:**
+To view your remote connection, type `git remote -v` (no response means you have no connection)
 
-##
+If you pressed the "✓ Commit" button, your changes are commited to the local repository, but not on Github.
+To save your changes to Github, perform **ONE** of the following steps:
+* Click on "Sync Changes" (The blue button with the arrows, located in Source Control)
+* OR type `git push origin main`
+
+## Using GIT Console
 1. Type `git add`
-2. Type `git push origin main`
+2. Type `git commit -m <message>`
+3. Type `git push origin main`
 
 ## Basic Commands
 ```
