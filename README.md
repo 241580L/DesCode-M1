@@ -1,12 +1,12 @@
 # DesCode
 
 ## How to Download (You should do this only once)
-1. Open an empty folder in VSC (File > Open Folder > &lt;Folder Name>)
-2. `git clone https://github.com/241580L/DesCode/`
-3. `git remote add origin https://github.com/241580L/DesCode/`
+1. Open an empty folder in VSC (File > Open Folder > &lt;Folder Name>) **(Make sure folder is empty!)**
+2. Type `git clone https://github.com/241580L/DesCode/`
+3. Type `git remote add origin https://github.com/241580L/DesCode/`
 
 ## How to Load Changes
-1. `git fetch`
+1. Type `git fetch`
 2. On left tab, go to Source Control (below the Search button, or press Ctrl+Shift+G)
 3. Click on "Sync Changes" (The blue button with the arrows)
 
@@ -24,11 +24,14 @@
 
 **NOTE:**
 If you pressed the commit button, your changes are commited to the LR but not on Github.
-To save your changes to github, type the following:
+To save your changes to github, perform the following steps:
+1. Click on "Sync Changes" (The blue button with the arrows)
+OR
+1. Type `git push origin main`
 
 ##
-1. `git add`
-2. `git push origin main`
+1. Type `git add`
+2. Type `git push origin main`
 
 ## Basic Commands
 ```
