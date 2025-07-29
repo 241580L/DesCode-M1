@@ -6,6 +6,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import UserContext from '../contexts/UserContext';
 import { useContext } from 'react';
+import Logo from '../assets/DesCodeFullLogo.svg'
 
 function Home() {
     const { user } = useContext(UserContext);
@@ -24,12 +25,12 @@ function Home() {
         >
             <Paper elevation={3} sx={{ p: { xs: 3, sm: 5 }, borderRadius: 3, maxWidth: 400, width: '100%', textAlign: 'center' }}>
                 {/* Logo or Hero */}
-                <Box sx={{ mb: 2 }}>
-                    <img src="/logo192.png" alt="Descode Logo" width={64} height={64} />
-                </Box>
                 <Typography variant="h4" fontWeight="bold" sx={{ mb: 1 }}>
-                    Welcome to Descode
+                    Welcome to
                 </Typography>
+                <Box sx={{ mb: 2 }}>
+                    <img src={Logo} alt="Descode" height={64}/>
+                </Box>
                 <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
                     Your one-stop platform for checking the CoP conformation.
                 </Typography>

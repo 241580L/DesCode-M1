@@ -10,6 +10,7 @@ import EditProfile from './pages/EditProfile';
 import AdminPage from './pages/Admin';
 import ManageUsers from './pages/ManageUsers';
 import UserContext from './contexts/UserContext';
+import Logo from './assets/DesCodeFullLogoW.svg'
 import {
   Container,
   AppBar,
@@ -153,7 +154,9 @@ function App() {
                   variant="text"
                   sx={{ color: 'white', textTransform: 'none', fontWeight: 'bold', fontSize: 20 }}
                 >
-                  Descode
+                  <Box sx={{ display: 'flex'}}x>
+                    <img src={Logo} alt="Descode"/>
+                  </Box>
                 </Button>
                 <Button component={Link} to="/reviews" color="inherit">
                   Reviews
