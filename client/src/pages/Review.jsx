@@ -11,7 +11,8 @@ import {
     IconButton,
     Button,
     Paper,
-    Alert
+    Alert,
+    TextField
 } from '@mui/material';
 import { AccessTime, Edit, AccountCircle, ThumbUp, ThumbDown } from '@mui/icons-material';
 import { useParams, Link } from 'react-router-dom';
@@ -20,6 +21,8 @@ import global from '../global';
 import http from '../http';
 import StarRating from '../components/StarRating';
 import UserContext from '../contexts/UserContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Review() {
     const { id } = useParams(); // get review id from URL
@@ -29,6 +32,12 @@ function Review() {
     const { user } = useContext(UserContext);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [replyContent, setReplyContent] = useState('');
+    const [postingReply, setPostingReply] = useState(false);
+    const [replyError, setReplyError] = useState('');
+    const [editingReplyId, setEditingReplyId] = useState(null);
+    const [editingReplyContent, setEditingReplyContent] = useState('');
+
 
     const fetchReview = () => {
         http.get(`/reviews/${id}`).then((res) => {
@@ -77,11 +86,80 @@ function Review() {
             });
     };
 
+    const postReply = async () => {
+        if (!replyContent.trim()) {
+            toast.error('Reply content cannot be empty.');
+            return;
+        }
+        setPostingReply(true);
+        setReplyError('');
+        try {
+            await http.post(`/reviews/${id}/replies`, { content: replyContent.trim() });
+            setReplyContent('');
+            // Refresh replies
+            const res = await http.get(`/reviews/${id}/replies`);
+            setReplies(res.data);
+            toast.success('Reply added successfully.');
+        } catch (err) {
+            toast.error('Failed to post reply. Please try again.');
+        } finally {
+            setPostingReply(false);
+        }
+    };
+
+    const fetchReplies = () => {
+        http.get(`/reviews/${id}/replies`).then(res => {
+            setReplies(res.data);
+        }).catch(err => {
+            console.error("Failed to fetch replies:", err);
+        });
+    };
+
+    const startEditingReply = (reply) => {
+        setEditingReplyId(reply.ReplyID);
+        setEditingReplyContent(reply.Content);
+    };
+
+    const cancelEditingReply = () => {
+        setEditingReplyId(null);
+        setEditingReplyContent('');
+    };
+
+    const saveEditedReply = async () => {
+        if (!editingReplyContent.trim()) {
+            toast.error('Reply content cannot be empty.');
+            return;
+        }
+        try {
+            await http.put(`/reviews/replies/${editingReplyId}`, {
+                content: editingReplyContent.trim(),
+            });
+            cancelEditingReply();
+            fetchReplies();
+            toast.success('Reply updated successfully.');
+        } catch (err) {
+            toast.error('Failed to update reply. Please try again.');
+        }
+    };
+
+    const handleDeleteReply = async (replyId) => {
+        if (!window.confirm('Are you sure you want to delete this reply?')) return;
+        try {
+            await http.delete(`/reviews/replies/${replyId}`);
+            // Refetch replies
+            fetchReplies();
+            toast.success('Reply deleted successfully.');
+        } catch (err) {
+            toast.error('Failed to delete reply. Try again.');
+        }
+    };
+
     useEffect(() => {
         fetchReview();
         if (user) {
             fetchVotes();
         }
+        fetchReplies();
         // eslint-disable-next-line
     }, [id]);
 
@@ -96,10 +174,10 @@ function Review() {
     return (
         <Box sx={{ mt: 4, }}>
             <Link to={`/reviews/`}>
-                    <Button variant="outlined" sx={{ mb: 2, }}>
-                        &lt;&lt; Back
-                    </Button>
-                </Link>
+                <Button variant="outlined" sx={{ mb: 2, }}>
+                    &lt;&lt; Back
+                </Button>
+            </Link>
             <Card sx={{ mb: 3, borderRadius: 3, boxShadow: 2 }}>
                 <CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -164,25 +242,96 @@ function Review() {
                 Admin Replies
             </Typography>
 
-
             {replies.length === 0 ? (
                 <Typography color="text.secondary">No replies yet.</Typography>
             ) : (
-                replies.map((reply) => (
-                    <Paper key={reply.ReplyID} sx={{ mb: 2, p: 2 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                            <Avatar sx={{ mr: 1 }}>{reply.Replier?.name?.[0]}</Avatar>
-                            <Box>
-                                <Typography variant="subtitle2">{reply.Replier?.name}</Typography>
-                                <Typography variant="caption" color="text.secondary">
-                                    {dayjs(reply.PostDateTime).format(global.datetimeFormat)}
-                                </Typography>
-                            </Box>
-                        </Box>
-                        <Typography sx={{ whiteSpace: 'pre-wrap' }}>{reply.Content}</Typography>
-                    </Paper>
-                ))
+                replies
+                    .filter((r) => !r.deleted)
+                    .map((reply) => {
+                        const canEdit = user && (user.isAdmin || user.id === reply.ReplierID);
+                        const isEditing = editingReplyId === reply.ReplyID;
+
+                        return (
+                            <Paper key={reply.ReplyID} sx={{ mb: 2, p: 2 }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                                    <Avatar sx={{ mr: 1 }}>{reply.Replier?.name?.[0]}</Avatar>
+                                    <Box sx={{ flex: 1 }}>
+                                        <Typography variant="subtitle2">{reply.Replier?.name}</Typography>
+                                        <Typography variant="caption" color="text.secondary">
+                                            {dayjs(reply.PostDateTime).format(global.datetimeFormat)}
+                                            {reply.EditDateTime && ' (edited)'}
+                                        </Typography>
+                                    </Box>
+                                    {canEdit && !isEditing && (
+                                        <Button size="small" onClick={() => startEditingReply(reply)}>
+                                            Edit
+                                        </Button>
+                                    )}
+                                    {(user && (user.isAdmin || user.id === reply.ReplierID)) && (
+                                        <Button size="small" color="error" onClick={() => handleDeleteReply(reply.ReplyID)}>
+                                            Delete
+                                        </Button>
+                                    )}
+                                </Box>
+
+                                {isEditing ? (
+                                    <>
+                                        <TextField
+                                            fullWidth
+                                            multiline
+                                            minRows={3}
+                                            value={editingReplyContent}
+                                            onChange={(e) => setEditingReplyContent(e.target.value)}
+                                            sx={{ mb: 1 }}
+                                        />
+                                        {replyError && (
+                                            <Typography variant="body2" color="error" sx={{ mb: 1 }}>
+                                                {replyError}
+                                            </Typography>
+                                        )}
+                                        <Button variant="contained" size="small" onClick={saveEditedReply} sx={{ mr: 1 }}>
+                                            Save
+                                        </Button>
+                                        <Button variant="outlined" size="small" onClick={cancelEditingReply}>
+                                            Cancel
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Typography sx={{ whiteSpace: 'pre-wrap' }}>{reply.Content}</Typography>
+                                )}
+                            </Paper>
+                        );
+                    })
             )}
+
+            {user && user.isAdmin && (
+                <Box sx={{ mt: 3 }}>
+                    <Typography variant="h6">Add a Reply</Typography>
+                    <TextField
+                        fullWidth
+                        multiline
+                        minRows={3}
+                        value={replyContent}
+                        onChange={(e) => setReplyContent(e.target.value)}
+                        disabled={postingReply}
+                        placeholder="Write your reply here..."
+                        sx={{ mt: 1, mb: 1 }}
+                    />
+                    {replyError && (
+                        <Typography variant="body2" color="error" sx={{ mb: 1 }}>
+                            {replyError}
+                        </Typography>
+                    )}
+                    <Button
+                        variant="contained"
+                        onClick={postReply}
+                        disabled={postingReply}
+                    >
+                        {postingReply ? 'Posting...' : 'Submit Reply'}
+                    </Button>
+                </Box>
+            )}
+            <ToastContainer position="top-right" autoClose={3000} />
         </Box>
     );
 }

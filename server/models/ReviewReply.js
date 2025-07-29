@@ -39,6 +39,10 @@ module.exports = (sequelize, DataTypes) => {
     ReplierID: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }, {
     tableName: 'review_replies',

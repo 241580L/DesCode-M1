@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const app = require('../index');
 const { ReviewVote, Review, User, sequelize } = require('../models');
 
-const testUser = { id: 1, email: 'testuser@example.com', name: 'Test User' };
+const testUser = { id: 1, email: 'testuser@example.com', name: 'Test User', isAdmin: true };
 const testReviewId = 1;
 const appSecret = process.env.APP_SECRET || 'testsecret';
 

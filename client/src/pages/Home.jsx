@@ -12,8 +12,8 @@ function Home() {
     return (
         <Box
             sx={{
-                minHeight: '100vh',
-                minWidth: '100vw',
+                minHeight: '85vh',
+                minWidth: '0',
                 bgcolor: '#f5f6fa',
                 display: 'flex',
                 flexDirection: 'column',
@@ -38,8 +38,30 @@ function Home() {
                 <Stack spacing={2} direction="column" alignItems="center">
                     <Button
                         component={RouterLink}
-                        to="/reviews"
+                        to="/login"
                         variant="contained"
+                        startIcon={<Login />}
+                        size="large"
+                        fullWidth
+                        sx={{ textTransform: 'none' }}
+                    >
+                        Login
+                    </Button>
+                    <Button
+                        component={RouterLink}
+                        to="/register"
+                        variant="outlined"
+                        startIcon={<PersonAdd />}
+                        size="large"
+                        fullWidth
+                        sx={{ textTransform: 'none' }}
+                    >
+                        Register
+                    </Button>
+                    <Button
+                        component={RouterLink}
+                        to="/reviews"
+                        variant="outlined"
                         startIcon={<RateReview />}
                         size="large"
                         fullWidth
@@ -57,28 +79,6 @@ function Home() {
                         sx={{ textTransform: 'none' }}
                     >
                         Add a Review
-                    </Button>
-                    <Button
-                        component={RouterLink}
-                        to="/login"
-                        variant="text"
-                        startIcon={<Login />}
-                        size="large"
-                        fullWidth
-                        sx={{ textTransform: 'none' }}
-                    >
-                        Login
-                    </Button>
-                    <Button
-                        component={RouterLink}
-                        to="/register"
-                        variant="text"
-                        startIcon={<PersonAdd />}
-                        size="large"
-                        fullWidth
-                        sx={{ textTransform: 'none' }}
-                    >
-                        Register
                     </Button>
                 </Stack>
                 <Typography variant="body2" sx={{ mt: 4, color: 'text.secondary' }}>

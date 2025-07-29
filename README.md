@@ -5,6 +5,9 @@
 2. Press Ctrl+` to open terminal
 3. Type `git clone https://github.com/241580L/DesCode-M1/`
 4. Type `git remote add origin https://github.com/241580L/DesCode-M1/`
+5. Type `cd server` to go to server directory
+6. Open up a new terminal and `cd client` to go to client directory
+7. Run `npm install` in both the server and client terminals to install dependencies
 
 ## How to Load Changes
 1. Type `git fetch`

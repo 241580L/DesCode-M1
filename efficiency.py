@@ -67,10 +67,8 @@ if __name__=="__main__":
 {CS}components/ConfirmModal.jsx
 {CS}pages/EditProfile.jsx
 {CS}pages/ManageUsers.jsx
-{CS}pages/User.jsx
 {CS}App.jsx
 {CS}http.js
-{S}models/Admin.js
 {S}models/Reviews.js
 {S}models/ReviewReply.js
 {S}models/User.js
@@ -81,32 +79,31 @@ if __name__=="__main__":
 {S}routes/file.js
 {S}index.js'''.split("\n")]
     REV = [e.strip() for e in f'''{CS}pages/Home.jsx
+{CS}pages/Reviews.jsx
+{CS}pages/Review.jsx
+{CS}pages/Admin.jsx
+{CS}components/AdminNavbar.jsx
+{CS}components/StarRating.jsx
+{CS}App.jsx
+{CS}http.js
+{S}models/Reviews.js
+{S}models/ReviewReply.js
+{S}models/User.js
+{S}models/ReviewVote.js
+{S}models/ReplyVote.js
+{S}routes/reviews.js
+{S}routes/user.js
+{S}index.js'''.split("\n")]
+    EPR = [e.strip() for e in f'''{CS}pages/Home.jsx
 {CS}pages/Register.jsx
 {CS}pages/Login.jsx
-{CS}pages/EditReview.jsx
-{CS}pages/AddReview.jsx
+{CS}pages/Admin.jsx
 {CS}components/AdminNavbar.jsx
 {CS}components/StarRating.jsx
 {CS}components/ConfirmModal.jsx
 {CS}pages/EditProfile.jsx
 {CS}App.jsx
 {CS}http.js
-{S}models/Admin.js
-{S}models/User.js
-{S}routes/reviews.js
-{S}routes/user.js
-{S}index.js'''.split("\n")]
-    ADM = [e.strip() for e in f'''{CS}pages/Home.jsx
-{CS}pages/Review.jsx
-{CS}pages/Admin.jsx
-{CS}components/AdminNavbar.jsx
-{CS}components/StarRating.jsx
-{CS}components/ConfirmModal.jsx
-{CS}pages/EditProfile.jsx
-{CS}pages/ManageUsers.jsx
-{CS}pages/User.jsx
-{CS}App.jsx
-{S}models/Admin.js
 {S}models/Reviews.js
 {S}models/ReviewReply.js
 {S}models/User.js
@@ -115,7 +112,6 @@ if __name__=="__main__":
 {S}routes/reviews.js
 {S}routes/user.js
 {S}routes/file.js
-{S}tests/admin.test.js
 {S}index.js'''.split("\n")]
     '''
     w = "\n\n".join(ReadFile(ROOT+rel,True) for rel in RELS)

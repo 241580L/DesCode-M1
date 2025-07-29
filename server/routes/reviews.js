@@ -188,11 +188,10 @@ router.get("/:id", async (req, res) => {
 router.get('/:id/replies', async (req, res) => {
     try {
         const replies = await ReviewReply.findAll({
-            where: { ReviewID: req.params.id },
-            include: [{ model: Admin, as: 'Replier', attributes: ['name', 'email'] }],
-            order: [['PostDateTime', 'ASC']]
+            where: { ReviewID: req.params.id, deleted: false },  // <-- exclude deleted
+            include: [{ model: User, as: 'Replier', attributes: ['name', 'email'] }],
+            order: [['PostDateTime', 'ASC']],
         });
-
         res.json(replies);
     } catch (err) {
         wiz(err, 'Error fetching replies:');
@@ -328,5 +327,103 @@ router.post('/:id/vote', validateToken, async (req, res) => {
     }
 });
 
+// REPLY
+router.post('/:id/replies', validateToken, async (req, res) => {
+    try {
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: 'Only admins can reply.' });
+        }
+        const reviewId = parseInt(req.params.id);
+        const { content } = req.body;
+        if (!content || content.trim().length === 0) {
+            return res.status(400).json({ message: 'Reply content cannot be empty.' });
+        }
+        // Create the reply
+        const newReply = await ReviewReply.create({
+            ReviewID: reviewId,
+            Content: content.trim(),
+            ReplierID: req.user.id,
+            PostDateTime: new Date(),
+        });
+
+        // Reload reply with Replier data
+        const replyWithUser = await ReviewReply.findByPk(newReply.ReplyID, {
+            include: [{ model: User, as: 'Replier', attributes: ['name'] }],
+        });
+
+        res.json(replyWithUser);
+    } catch (err) {
+        wiz(err, "Error adding reply");
+        res.status(500).json({ message: 'Failed to add reply.' });
+    }
+});
+
+// Edit reply
+router.put('/replies/:replyId', validateToken, async (req, res) => {
+    try {
+        const replyId = req.params.replyId;
+        const userId = req.user.id;
+        const isAdmin = req.user.isAdmin;
+        const { content } = req.body;
+
+        if (!content || content.trim().length === 0) {
+            return res.status(400).json({ message: 'Reply content cannot be empty.' });
+        }
+
+        const reply = await ReviewReply.findByPk(replyId);
+
+        if (!reply || reply.deleted) {
+            return res.status(404).json({ message: 'Reply not found.' });
+        }
+
+        // Only allow admins or the replier themselves to edit their reply
+        if (!isAdmin && reply.ReplierID !== userId) {
+            return res.sendStatus(403);
+        }
+
+        reply.Content = content.trim();
+        reply.EditDateTime = new Date();
+        await reply.save();
+
+        // Return updated reply with user
+        const updatedReply = await ReviewReply.findByPk(replyId, {
+            include: [{ model: User, as: 'Replier', attributes: ['name'] }],
+        });
+
+        res.json(updatedReply);
+    } catch (err) {
+        wiz(err, 'Error updating reply:');
+        res.status(500).json({ message: 'Failed to update reply.' });
+    }
+});
+
+
+// Delete reply
+router.delete('/replies/:replyId', validateToken, async (req, res) => {
+    try {
+        const replyId = req.params.replyId;
+        const userId = req.user.id;
+        const isAdmin = req.user.isAdmin;
+
+        const reply = await ReviewReply.findByPk(replyId);
+
+        if (!reply || reply.deleted) {
+            return res.status(404).json({ message: 'Reply not found.' });
+        }
+
+        // Only allow admins or the replier themselves to delete their reply
+        if (!isAdmin && reply.ReplierID !== userId) {
+            return res.sendStatus(403);
+        }
+
+        reply.deleted = true;
+        await reply.save();
+
+        res.json({ message: 'Reply deleted successfully.' });
+    } catch (err) {
+        wiz(err, 'Error deleting reply:');
+        res.status(500).json({ message: 'Failed to delete reply.' });
+    }
+});
 
 module.exports = router;

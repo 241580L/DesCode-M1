@@ -3,4 +3,10 @@ function wiz(err, msg = "Error:") {
         console.log(`${msg}\n${err}`);
     }
 }
-module.exports = { wiz };
+
+function log(msg = "") {
+    if (process.env.DEBUG_MODE) {
+        console.log(`${msg}`);
+    }
+}
+module.exports = { wiz, log };

@@ -17,38 +17,99 @@ import {
   Button,
   Toolbar,
   Typography,
+  Menu,
+  MenuItem,
 } from '@mui/material';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation
+ } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import MyTheme from './themes/MyTheme';
 import http from './http';
 
 function AppBarLinks({ user, logout }) {
-  // console.log("id:", user);
   const location = useLocation();
   const currentPath = location.pathname;
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  // Open menu handler
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  // Close menu handler
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   if (user) {
     return (
       <>
-        <Typography sx={{ mr: 2 }}>{user.name}</Typography>
-        {/* Add Edit Profile Button */}
-        <Button component={Link} to="/edit-profile" color="inherit" sx={{ mr: 2 }}>
-          Edit Profile
+        <Button
+          color="inherit"
+          startIcon={<AccountCircleIcon />}
+          onClick={handleMenuOpen}
+          sx={{ textTransform: 'none' }}
+        >
+          {user.name}
         </Button>
-        {user.isAdmin ? <Button component={Link} color="inherit" to="/admin">Admin</Button> : null}
-        <Button color="inherit" onClick={logout}>
-          Logout
-        </Button>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleMenuClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem
+            component={Link}
+            to="/edit-profile"
+            onClick={handleMenuClose}
+          >
+            Edit Profile
+          </MenuItem>
+          {user.isAdmin && (
+            <MenuItem
+              component={Link}
+              to="/admin"
+              onClick={handleMenuClose}
+            >
+              Admin Portal
+            </MenuItem>
+          )}
+          <MenuItem
+            onClick={() => {
+              handleMenuClose();
+              logout();
+            }}
+          >
+            Logout
+          </MenuItem>
+        </Menu>
       </>
     );
   } else {
     return (
       <>
-        <Button component={Link} to={`/register?from=${encodeURIComponent(currentPath)}`} color="inherit">
+        <Button
+          component={Link}
+          to={`/register?from=${encodeURIComponent(currentPath)}`}
+          color="inherit"
+        >
           Register
         </Button>
-        <Button component={Link} to={`/login?from=${encodeURIComponent(currentPath)}`} color="inherit">
+        <Button
+          component={Link}
+          to={`/login?from=${encodeURIComponent(currentPath)}`}
+          color="inherit"
+        >
           Login
         </Button>
       </>
