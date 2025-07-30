@@ -2,9 +2,9 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const app = require('../index');
-const { ReviewVote, Review, User, sequelize } = require('../models');
+const db = require('../models');
 
-const testUser = { id: 1, email: 'testuser@example.com', name: 'Test User', isAdmin: true };
+// const testUser = { id: 1, email: 'testuser@example.com', name: 'Test User', isAdmin: true };
 const testReviewId = 1;
 const appSecret = process.env.APP_SECRET || 'testsecret';
 
@@ -12,14 +12,38 @@ describe('POST /reviews/:id/vote', () => {
   let token;
 
   beforeAll(async () => {
-    token = jwt.sign(testUser, appSecret, { expiresIn: '1h' });
+    // Fetch user from DB by primary key
+    testUser = await db.User.findByPk(1);
+    if (!testUser) {
+      throw new Error('Test user with id 1 not found');
+    }
+    // Sign JWT token with user data (convert to plain object)
+    token = jwt.sign({
+      id: testUser.id,
+      email: testUser.email,
+      name: testUser.name,
+      isAdmin: testUser.isAdmin,
+    }, appSecret, { expiresIn: '1h' });
 
-    // Ensure the test review and user exist or create dummy ones if necessary
+    // Ensure the test review and user exist or create dummy ones if necessary 
     // This step depends on your test DB setup
+
+    // Ensure the test review exists or create it
+    await db.Review.findOrCreate({
+      where: { id: testReviewId },
+      defaults: {
+        title: 'Test Review for Voting',
+        description: 'Test Description',
+        stars: 4,
+        reviewerId: testUser.id,
+        deleted: false,
+        postDateTime: new Date()
+      }
+    });
   });
 
   afterAll(async () => {
-    await sequelize.close();
+    await db.sequelize.close();
   });
 
   test('should reject without auth token', async () => {

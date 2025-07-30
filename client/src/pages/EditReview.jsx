@@ -120,12 +120,36 @@ function EditReview() {
 
                 {isOwner && (
                     <Button
-                        sx={{ mt: 3 }}
+                        sx={{ mt: 2 }}
                         variant="contained"
                         type="submit"
                         disabled={saving || !formik.isValid}
                     >
                         {saving ? 'Saving...' : 'Update Review'}
+                    </Button>
+                )}
+
+                {isOwner && (
+                    <Button
+                        sx={{ mt: 2, ml: 2 }}
+                        color="error"
+                        variant="outlined"
+                        onClick={async () => {
+                            if (window.confirm('Are you sure you want to delete this review?')) {
+                                try {
+                                    setSaving(true);
+                                    await http.delete(`/reviews/${id}`);
+                                    navigate('/reviews'); // Redirect after delete
+                                } catch (err) {
+                                    alert(`Failed to delete review: ${err}`);
+                                } finally {
+                                    setSaving(false);
+                                }
+                            }
+                        }}
+                        disabled={saving}
+                    >
+                        Delete Review
                     </Button>
                 )}
             </Box>

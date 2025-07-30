@@ -247,30 +247,22 @@ router.put("/:id", validateToken, async (req, res) => {
 
 // SOFT DELETE review
 router.delete("/:id", validateToken, async (req, res) => {
-    let id = req.params.id;
-    let userId = req.user.id;
+    const id = req.params.id;
+    const userId = req.user.id;
     try {
         const review = await Review.findByPk(id);
         if (!review || review.deleted) {
-            res.sendStatus(404);
-            return;
+            return res.sendStatus(404);
         }
         if (review.reviewerId !== userId) {
-            res.sendStatus(403);
-            return;
+            return res.sendStatus(403);
         }
-        // Soft delete: set deleted = true
         review.deleted = true;
-        await review.save();
-        const num = await Review.update({ deleted: true }, { where: { id } });
-        if (num[0] === 1) {
-            res.json({ message: "Review was deleted successfully." });
-        } else {
-            res.status(400).json({ message: `Cannot delete review with id ${id}.` });
-        }
+        await review.save();  // single update to mark deleted
+        return res.json({ message: "Review was deleted successfully." });
     } catch (err) {
-        wiz(err, `Error while deleting review #${id}:`)
-        res.status(500).json({ error: "Failed to delete review." });
+        wiz(err, `Error while deleting review #${id}:`);
+        return res.status(500).json({ error: "Failed to delete review." });
     }
 });
 

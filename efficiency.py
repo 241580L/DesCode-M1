@@ -113,6 +113,18 @@ if __name__=="__main__":
 {S}routes/user.js
 {S}routes/file.js
 {S}index.js'''.split("\n")]
+    TEST = [e.strip() for e in f'''
+{S}models/Reviews.js
+{S}models/ReviewReply.js
+{S}models/User.js
+{S}models/ReviewVote.js
+{S}models/ReplyVote.js
+{S}routes/reviews.js
+{S}routes/user.js
+{S}routes/file.js
+{S}tests/admin.test.js
+{S}tests/helloworld.test.js
+{S}tests/reviewVote.test.js'''.split("\n")]
     '''
     w = "\n\n".join(ReadFile(ROOT+rel,True) for rel in RELS)
     p = len(w)/LEN1

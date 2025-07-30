@@ -25,7 +25,7 @@ router.post("/register", async (req, res) => {
     let data = req.body;
     // Validate request body
     let validationSchema = yup.object({
-        name: yup.string().trim().min(3).max(50).required().matches(/^[a-zA-Z '-,.]+$/,
+        name: yup.string().trim().min(3).max(50).required().matches(/^[a-zA-Z '\-,.]+$/,
             "Name only allow letters, spaces and characters: ' - , ."),
         email: yup.string().trim().lowercase().email().max(50).required(),
         password: yup.string().trim().min(8).max(50).required().matches(/^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/,
