@@ -60,12 +60,17 @@ export default function EditProfile() {
       .max(50, 'Password must be at most 50 characters')
       .matches(/^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/, 'Password must contain at least 1 letter and 1 number')
       .notRequired(),
-    confirmPassword: yup.string().when('newPassword', (newPassword, schema) => {
-      const val = typeof newPassword === 'string' ? newPassword.trim() : '';
-      return val.length > 0
-        ? schema.required('Confirm password is required').oneOf([yup.ref('newPassword')], 'Passwords must match')
-        : schema.notRequired();
-    }),
+    confirmPassword: yup
+      .string()
+      .when('newPassword', {
+        is: (val) => val && val.trim().length > 0,
+        then: () => yup
+          .string()
+          .required('Confirm password is required')
+          .oneOf([yup.ref('newPassword')], 'Passwords must match'),
+        otherwise: () => yup.string().notRequired(),
+      }),
+      // add () => in front of the two yups to fix branch is not a function error
   });
 
 
