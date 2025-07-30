@@ -149,7 +149,7 @@ export default function ManageUsers() {
 
   return (
     <Box sx={{ pt: 8 }}>
-      <AdminNavbar />
+      {/*<AdminNavbar />*/}
       <Box maxWidth={900} margin="auto" sx={{ mt: 4, px: 2 }}>
         <ToastContainer position="top-right" autoClose={3000} />
         <Typography variant="h4" gutterBottom>
