@@ -125,10 +125,21 @@ if __name__=="__main__":
 {S}tests/admin.test.js
 {S}tests/helloworld.test.js
 {S}tests/reviewVote.test.js'''.split("\n")]
+    MGU = [e.strip() for e in f'''{CS}pages/Home.jsx
+{CS}pages/Register.jsx
+{CS}pages/Admin.jsx
+{CS}pages/EditProfile.jsx
+{CS}pages/ManageUsers.jsx
+{CS}App.jsx
+{CS}http.js
+{S}models/User.js
+{S}routes/reviews.js
+{S}routes/user.js
+{S}index.js'''.split("\n")]
     '''
     w = "\n\n".join(ReadFile(ROOT+rel,True) for rel in RELS)
     p = len(w)/LEN1
     print(w)
     print(f"Original Length: {LEN1}\nMinified length: {len(w)}\n{100*p:.2f}% of original size\n{40000/p:.0f}")
     '''
-    ReturnRels(REV,True)
+    ReturnRels(MGU,True)

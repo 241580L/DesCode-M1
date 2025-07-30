@@ -16,6 +16,15 @@
 
 ## How to Save Changes (Commit)
 
+**NOTE:** Whatever you do, DO NOT commit the node_modules! Import them by typing `npm install`
+
+<details>
+  <summary>Click to expand dropdown</summary>
+
+  Here is the content hidden inside the dropdown. It can include text, lists, links, and even code blocks.
+
+</details>
+
 ### Using VSC:
 1. On left tab, go to Source Control (below the Search button, or press Ctrl+Shift+G)
 2. Go to CHANGES > Changes > (file you want to commit)
