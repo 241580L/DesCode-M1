@@ -16,13 +16,18 @@ app.get("/", (req, res) => {
     res.send("Welcome to the learning space.");
 });
 
+
 // Routes
-const reviewRoute = require('./routes/reviews'); // ignore the benign casing error
+const reviewRoute = require('./routes/reviews');
 app.use("/reviews", reviewRoute);
 const userRoute = require('./routes/user');
 app.use("/user", userRoute);
 const fileRoute = require('./routes/file');
-app.use("/file", fileRoute)
+app.use("/file", fileRoute);
+
+// AI Password route
+const aiRoute = require('./routes/ai');
+app.use('/ai', aiRoute);
 
 // Password suggestion endpoint
 const generatePassword = require('./utils/passwordGenerator');

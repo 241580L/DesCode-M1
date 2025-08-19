@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { generatePassword } from '../utils/passwordGenerator';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import AdminNavbar from '../components/AdminNavbar';
 import { ToastContainer, toast } from 'react-toastify';
 import {
@@ -23,6 +25,7 @@ export default function ManageUsers() {
     // store edited values per user id, initial undefined means no change
     const [editingUsers, setEditingUsers] = useState({});
     const [newUser, setNewUser] = useState({ name: '', email: '', password: '' });
+    const [showPassword, setShowPassword] = useState(false);
 
     const showToast = (text, type) => {
         if (type === 'success') toast.success(text);
@@ -168,13 +171,37 @@ export default function ManageUsers() {
                     />
                     <TextField
                         label="Password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         value={newUser.password}
                         onChange={(e) =>
                             setNewUser((prev) => ({ ...prev, password: e.target.value }))
                         }
                         fullWidth
                         sx={{ flex: 1, minWidth: 150 }}
+                        InputProps={{
+                            endAdornment: (
+                                <>
+                                    <Button
+                                        onClick={async () => {
+                                            const pwd = await generatePassword();
+                                            setNewUser((prev) => ({ ...prev, password: pwd }));
+                                        }}
+                                        size="small"
+                                        sx={{ minWidth: 0, px: 1 }}
+                                    >
+                                        Auto
+                                    </Button>
+                                    <Button
+                                        onClick={() => setShowPassword((prev) => !prev)}
+                                        size="small"
+                                        sx={{ minWidth: 0, px: 1 }}
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </Button>
+                                </>
+                            )
+                        }}
                     />
                     <Button variant="contained" onClick={handleCreateUser} sx={{ height: 56 }}>
                         Create User
