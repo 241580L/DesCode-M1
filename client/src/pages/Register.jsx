@@ -11,15 +11,23 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function Register() {
     const navigate = useNavigate();
-    const location=useLocation();
-    const params=new URLSearchParams(location.search);
-    const from=params.get('from') || '/';
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const from = params.get('from') || '/';
     const [loading, setLoading] = useState(false);
-    // There has been no async process yet
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
-    // these two lines mean that the password fields
-    // are initially hidden
+    const [suggestedPassword, setSuggestedPassword] = useState("");
+    // Password fields are initially hidden
+
+    const fetchPasswordSuggestion = async () => {
+        try {
+            const res = await http.get("/api/password-suggestion");
+            setSuggestedPassword(res.data.password);
+        } catch (err) {
+            setSuggestedPassword("Error fetching password");
+        }
+    };
   
     const trimAll = (obj) =>
       Object.fromEntries(
@@ -116,18 +124,33 @@ function Register() {
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
+                                <Button
+                                    variant="text"
+                                    size="small"
+                                    sx={{ minWidth: 0, px: 1, mr: 1 }}
+                                    onClick={fetchPasswordSuggestion}
+                                >
+                                    Suggestions
+                                </Button>
                                 <IconButton
-                                onClick={() => setShowPassword((s) => !s)}
-                                edge="end"
-                                tabIndex={-1} // pressing tab skips over this button
+                                    onClick={() => setShowPassword((s) => !s)}
+                                    edge="end"
+                                    tabIndex={-1}
                                 >
                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                 </IconButton>
                             </InputAdornment>
-                            // Toggle password visibility
                         )
                     }}
                 />
+                {suggestedPassword && suggestedPassword !== "Error fetching password" && (
+                    <Box sx={{ mt: 1, mb: 1, textAlign: 'center', fontStyle: 'italic', color: 'green' }}>
+                        Suggested: <span style={{ fontWeight: 'bold' }}>{suggestedPassword}</span>
+                        <Button size="small" sx={{ ml: 1 }} onClick={() => formik.setFieldValue('password', suggestedPassword)}>
+                            Use
+                        </Button>
+                    </Box>
+                )}
                 <TextField
                     fullWidth margin="dense" autoComplete="off"
                     label="Confirm Password" name="confirmPassword" type={showConfirm ? "text" : "password"}

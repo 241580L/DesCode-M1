@@ -24,6 +24,13 @@ app.use("/user", userRoute);
 const fileRoute = require('./routes/file');
 app.use("/file", fileRoute)
 
+// Password suggestion endpoint
+const generatePassword = require('./utils/passwordGenerator');
+app.get('/api/password-suggestion', (req, res) => {
+    const password = generatePassword();
+    res.json({ password });
+});
+
 const db = require('./models');
 if (require.main === module) { // Only listen if running directly (not imported in test)
 db.sequelize.sync({ alter: true }) // removed { alter: true } because it generated username_2 to username_63.
