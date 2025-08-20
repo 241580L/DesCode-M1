@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
+import { generatePassword } from '../utils/passwordGenerator';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, TextField, Button, CircularProgress, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -71,7 +72,6 @@ export default function EditProfile() {
           .oneOf([yup.ref('newPassword')], 'Passwords must match'),
         otherwise: () => yup.string().notRequired(),
       }),
-      // add () => in front of the two yups to fix branch is not a function error
   });
 
 
@@ -228,6 +228,16 @@ export default function EditProfile() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
+                <Button
+                  onClick={async () => {
+                    const pwd = await generatePassword();
+                    formik.setFieldValue('newPassword', pwd);
+                  }}
+                  size="small"
+                  sx={{ minWidth: 0, px: 1 }}
+                >
+                  Suggestions
+                </Button>
                 <IconButton
                   onClick={() => setShowNewPassword((prev) => !prev)}
                   edge="end"

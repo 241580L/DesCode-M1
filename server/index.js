@@ -21,8 +21,9 @@ app.get("/", (req, res) => {
     res.send("Welcome to the learning space.");
 });
 
+
 // Routes
-const reviewRoute = require('./routes/reviews'); // ignore the benign casing error
+const reviewRoute = require('./routes/reviews');
 app.use("/reviews", reviewRoute);
 const userRoute = require('./routes/user');
 app.use("/user", userRoute);
@@ -32,6 +33,17 @@ const copRoute = require('./routes/cop');
 app.use("/cop", copRoute);
 const chatRoute = require('./routes/chat');
 app.use("/chat", chatRoute);
+
+// AI Password route
+const aiRoute = require('./routes/ai');
+app.use('/ai', aiRoute);
+
+// Password suggestion endpoint
+const generatePassword = require('./utils/passwordGenerator');
+app.get('/api/password-suggestion', (req, res) => {
+    const password = generatePassword();
+    res.json({ password });
+});
 
 const db = require('./models');
 if (require.main === module) { // Only listen if running directly (not imported in test)

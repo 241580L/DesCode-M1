@@ -15,11 +15,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Review() {
-
-    const { id } = useParams();
+    const { id } = useParams(); // get review id from URL
     const [review, setReview] = useState(null);
     const [replies, setReplies] = useState([]);
-    const [status, setStatus] = useState('loading'); // 'loading', 'success', 'not_found'
+    const [status, setStatus] = useState('loading');
     const { user } = useContext(UserContext);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -28,6 +27,10 @@ function Review() {
     const [replyError, setReplyError] = useState('');
     const [editingReplyId, setEditingReplyId] = useState(null);
     const [editingReplyContent, setEditingReplyContent] = useState('');
+    const [showAIReply, setShowAIReply] = useState(false);
+    const [aiReplySummary, setAIReplySummary] = useState("");
+    const [aiReplyLoading, setAIReplyLoading] = useState(false);
+    const [aiReplyError, setAIReplyError] = useState("");
 
     // At the top of your Review component function, after hooks like useState, useContext, etc.:
     useTitle(
@@ -89,7 +92,7 @@ function Review() {
             });
     };
 
-    const postReply = async () => {
+    const postReply = async (isAI = false) => {
         if (!replyContent.trim()) {
             toast.error('Reply content cannot be empty.');
             return;
@@ -97,7 +100,7 @@ function Review() {
         setPostingReply(true);
         setReplyError('');
         try {
-            await http.post(`/reviews/${id}/replies`, { content: replyContent.trim() });
+            await http.post(`/reviews/${id}/replies`, { content: replyContent.trim(), isAI });
             setReplyContent('');
             // Refresh replies
             const res = await http.get(`/reviews/${id}/replies`);
@@ -255,7 +258,7 @@ function Review() {
                         const isEditing = editingReplyId === reply.ReplyID;
 
                         return (
-                            <Paper key={reply.ReplyID} sx={{ mb: 2, p: 2 }}>
+                            <Paper key={reply.ReplyID} sx={{ mb: 2, p: 2, position: 'relative' }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                     <Avatar sx={{ mr: 1 }}>{reply.Replier?.name?.[0]}</Avatar>
                                     <Box sx={{ flex: 1 }}>
@@ -307,7 +310,7 @@ function Review() {
                     })
             )}
 
-            {user && user.isAdmin && (
+            {user && (user.isAdmin === true || user.isAdmin === 1) && (
                 <Box sx={{ mt: 3 }}>
                     <Typography variant="h6">Add a Reply</Typography>
                     <TextField
@@ -320,6 +323,80 @@ function Review() {
                         placeholder="Write your reply here..."
                         sx={{ mt: 1, mb: 1 }}
                     />
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        {!showAIReply ? (
+                            <>
+                                <Button variant="outlined" sx={{ mr: 1 }} onClick={() => setShowAIReply(true)}>
+                                    AI Suggestion
+                                </Button>
+                                {replyContent && (
+                                    <Button variant="outlined" color="warning" sx={{ mr: 1 }} onClick={async () => {
+                                        setAIReplyLoading(true);
+                                        setAIReplyError("");
+                                        setReplyContent("");
+                                        try {
+                                            const reviewText = review?.description || "";
+                                            const res = await http.post("/ai/review-reply", { review: reviewText });
+                                            if (res.data && res.data.reply) {
+                                                setReplyContent(res.data.reply);
+                                                await postReply(true);
+                                            } else {
+                                                setAIReplyError("No reply generated. Try again.");
+                                            }
+                                        } catch (err) {
+                                            setAIReplyError("Failed to regenerate reply. Try again.");
+                                        }
+                                        setAIReplyLoading(false);
+                                    }}>
+                                        Regenerate Response
+                                    </Button>
+                                )}
+                            </>
+                        ) : (
+                            <Box sx={{ width: '50%' }}>
+                                <TextField
+                                    fullWidth
+                                    multiline
+                                    minRows={2}
+                                    value={aiReplySummary}
+                                    onChange={e => setAIReplySummary(e.target.value)}
+                                    placeholder="Type context for reply..."
+                                    sx={{ mb: 1 }}
+                                />
+                                <Button
+                                    variant="contained"
+                                    disabled={aiReplyLoading || !aiReplySummary.trim()}
+                                    onClick={async () => {
+                                        setAIReplyLoading(true);
+                                        setAIReplyError("");
+                                        try {
+                                            const reviewText = review?.description || "";
+                                            const res = await http.post("/ai/review-reply", { review: reviewText });
+                                            if (res.data && res.data.reply) {
+                                                setReplyContent(res.data.reply);
+                                                setShowAIReply(false);
+                                                setAIReplySummary("");
+                                                await postReply(true);
+                                            } else {
+                                                setAIReplyError("No reply generated. Try again.");
+                                            }
+                                        } catch (err) {
+                                            setAIReplyError("Failed to generate reply. Try again.");
+                                        }
+                                        setAIReplyLoading(false);
+                                    }}
+                                    sx={{ mr: 1 }}
+                                >
+                                    Generate Reply
+                                </Button>
+                                <Button variant="text" onClick={() => { setShowAIReply(false); setAIReplySummary(""); setAIReplyError(""); }}>
+                                    Cancel
+                                </Button>
+                                {aiReplyLoading && <CircularProgress size={24} sx={{ ml: 2 }} />}
+                                {aiReplyError && <Alert severity="error" sx={{ mt: 1 }}>{aiReplyError}</Alert>}
+                            </Box>
+                        )}
+                    </Box>
                     {replyError && (
                         <Typography variant="body2" color="error" sx={{ mb: 1 }}>
                             {replyError}
