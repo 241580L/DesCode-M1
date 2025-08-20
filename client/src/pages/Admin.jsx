@@ -1,18 +1,18 @@
-import AdminNavbar from '../components/AdminNavbar';
-// client/src/pages/Home.jsx
 import React from 'react';
 import { Box, Typography, Button, Paper, Stack } from '@mui/material';
-import { RateReview, AddCircle, Login, PersonAdd } from '@mui/icons-material';
+import { RateReview, AddCircle, PostAdd } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import UserContext from '../contexts/UserContext';
 import { useContext } from 'react';
+import AdminNavbar from '../components/AdminNavbar';
+import useTitle from '../Title.jsx';
 import Logo from '../assets/DesCodeFullLogo.svg'
 
 export default function AdminPage() {
     const { user } = useContext(UserContext);
+    useTitle("DesCode Admin Portal")
     return (
-        <AdminNavbar />,
         <Box
             sx={{
                 minHeight: '85vh',
@@ -21,11 +21,10 @@ export default function AdminPage() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
-                py: 4,
             }}
         >
-            <Paper elevation={3} sx={{ p: { xs: 3, sm: 5 }, borderRadius: 3, maxWidth: 400, width: '100%', textAlign: 'center' }}>
+        <AdminNavbar/>
+            <Paper elevation={3} sx={{ m:"auto", p: { xs: 3, sm: 5 }, borderRadius: 3, maxWidth: 400, width: '100%', textAlign: 'center' }}>
                 {/* Logo or Hero */}
                 <Box sx={{ mb: 2 }}>
                     <img src={Logo} alt="Descode" height={64}/>
@@ -39,6 +38,17 @@ export default function AdminPage() {
 
                 {/* Navigation Buttons */}
                 <Stack spacing={2} direction="column" alignItems="center">
+                    <Button
+                        component={RouterLink}
+                        to="/cop"
+                        variant="contained"
+                        startIcon={<PostAdd />}
+                        size="large"
+                        fullWidth
+                        sx={{ textTransform: 'none' }}
+                    >
+                        Manage C.O.P. Documents
+                    </Button>
                     <Button
                         component={RouterLink}
                         to={user?"/manage-users":"/login"}

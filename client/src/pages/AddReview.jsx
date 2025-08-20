@@ -1,12 +1,13 @@
 // client/src/pages/AddReview.jsx
 import React, { useEffect, useState, useContext } from 'react';
-import { Box, Button, Typography, TextField, Alert, LinearProgress } from '@mui/material';
+import { Box, Button, Container, Typography, TextField, Alert, LinearProgress } from '@mui/material';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import http from '../http';
 import StarRating from '../components/StarRating';
 import UserContext from '../contexts/UserContext';
+import useTitle from '../Title.jsx';
 // visually display stars
 
 function AddReview() {
@@ -16,12 +17,14 @@ function AddReview() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   // ^ These three are react state hooks and tracks request status
-  
+  useTitle("Add Review")
   useEffect(() => {
-    if (!user) {
+    const token = localStorage.getItem('accessToken');
+    if (user === null && !loading && !token) {
+      // Condition 3: If the user has no token then they are not logged in
       navigate('/login');
     }
-  }, [user, navigate]);
+  }, [user, loading, navigate]);
 
   const formik = useFormik({
     initialValues: {
@@ -57,8 +60,8 @@ function AddReview() {
     }
   });
   return (
-    <Box>
-      <Typography variant="h5" sx={{ my: 2, fontWeight: 'bold' }}>
+    <Container>
+      <Typography variant="h4" sx={{ mt: 2 }}>
         Add Review
       </Typography>
       <Box component="form" onSubmit={formik.handleSubmit} sx={{ maxWidth: 500 }}>
@@ -104,7 +107,7 @@ function AddReview() {
           </Button>
         </Box>
       </Box>
-    </Box>
+    </Container>
   );
 }
 

@@ -4,12 +4,17 @@ require('dotenv').config();
 
 const express = require('express'); // EXPRESS is used to make the web server
 const cors = require('cors'); // CORS allows web browsers to make requests to other domains
+
 const app = express();
 app.use(express.json());
 // Enable CORS
 app.use(cors({
     origin: process.env.CLIENT_URL
 }));
+
+// Serve static files from public/uploads at /uploads
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Simple Route
 app.get("/", (req, res) => {
@@ -22,7 +27,11 @@ app.use("/reviews", reviewRoute);
 const userRoute = require('./routes/user');
 app.use("/user", userRoute);
 const fileRoute = require('./routes/file');
-app.use("/file", fileRoute)
+app.use("/file", fileRoute);
+const copRoute = require('./routes/cop');
+app.use("/cop", copRoute);
+const chatRoute = require('./routes/chat');
+app.use("/chat", chatRoute);
 
 const db = require('./models');
 if (require.main === module) { // Only listen if running directly (not imported in test)

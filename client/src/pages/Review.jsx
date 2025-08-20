@@ -1,18 +1,7 @@
-// client/src/pages/Review.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import {
-    Box,
-    Typography,
-    Divider,
-    CircularProgress,
-    Card,
-    CardContent,
-    Avatar,
-    IconButton,
-    Button,
-    Paper,
-    Alert,
-    TextField
+    Box, Container, Typography, Divider, CircularProgress, Card,
+    CardContent, Avatar, IconButton, Button, Paper, Alert, TextField
 } from '@mui/material';
 import { AccessTime, Edit, AccountCircle, ThumbUp, ThumbDown } from '@mui/icons-material';
 import { useParams, Link } from 'react-router-dom';
@@ -21,11 +10,13 @@ import global from '../global';
 import http from '../http';
 import StarRating from '../components/StarRating';
 import UserContext from '../contexts/UserContext';
+import useTitle from '../Title.jsx';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Review() {
-    const { id } = useParams(); // get review id from URL
+
+    const { id } = useParams();
     const [review, setReview] = useState(null);
     const [replies, setReplies] = useState([]);
     const [status, setStatus] = useState('loading'); // 'loading', 'success', 'not_found'
@@ -38,10 +29,22 @@ function Review() {
     const [editingReplyId, setEditingReplyId] = useState(null);
     const [editingReplyContent, setEditingReplyContent] = useState('');
 
+    // At the top of your Review component function, after hooks like useState, useContext, etc.:
+    useTitle(
+        status === 'success' && review ?
+            review.title :
+            status === 'not_found' ?
+                "Review Not Found" :
+                "Loading Review..."
+    );
 
     const fetchReview = () => {
         http.get(`/reviews/${id}`).then((res) => {
             setReview(res.data);
+            setStatus('success');
+        }).catch(() => {
+            setStatus('not_found');
+            setError('Review not found.');
         }).finally(() => setLoading(false));
     };
 
@@ -172,7 +175,7 @@ function Review() {
     }
 
     return (
-        <Box sx={{ mt: 4, }}>
+        <Container sx={{ mt: 3, }}>
             <Link to={`/reviews/`}>
                 <Button variant="outlined" sx={{ mb: 2, }}>
                     &lt;&lt; Back
@@ -332,7 +335,7 @@ function Review() {
                 </Box>
             )}
             <ToastContainer position="top-right" autoClose={3000} />
-        </Box>
+        </Container>
     );
 }
 

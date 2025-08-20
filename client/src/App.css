@@ -13,3 +13,7 @@ body {
   color: inherit;
   margin-left: 12px;
 }
+
+a {
+  color: #66c;
+}
