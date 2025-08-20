@@ -23,6 +23,11 @@ function AddReview() {
     }
   }, [user, navigate]);
 
+  const [showAISuggestion, setShowAISuggestion] = useState(false);
+  const [aiSummary, setAISummary] = useState("");
+  const [aiLoading, setAILoading] = useState(false);
+  const [aiError, setAIError] = useState(null);
+
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -77,7 +82,7 @@ function AddReview() {
         />
         <TextField
           fullWidth margin="dense" autoComplete="off"
-          multiline minRows={2}
+          multiline minRows={6}
           label="Description"
           name="description"
           value={formik.values.description}
@@ -86,6 +91,56 @@ function AddReview() {
           error={formik.touched.description && Boolean(formik.errors.description)}
           helperText={formik.touched.description && formik.errors.description}
         />
+        {/* AI Suggestion Section */}
+        <Box sx={{ mt: 2 }}>
+          {!showAISuggestion ? (
+            <Button variant="outlined" onClick={() => setShowAISuggestion(true)}>
+              AI Suggestion
+            </Button>
+          ) : (
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>Enter a summary for AI to generate a review:</Typography>
+              <TextField
+                fullWidth
+                multiline
+                minRows={2}
+                value={aiSummary}
+                onChange={e => setAISummary(e.target.value)}
+                placeholder="Type your summary here..."
+                sx={{ mb: 1 }}
+              />
+              <Button
+                variant="contained"
+                disabled={aiLoading || !aiSummary.trim()}
+                onClick={async () => {
+                  setAILoading(true);
+                  setAIError(null);
+                  try {
+                    // Call backend AI endpoint
+                    const res = await http.post("/ai/review-suggestion", { summary: aiSummary });
+                    if (res.data && res.data.suggestion) {
+                      formik.setFieldValue("description", res.data.suggestion);
+                    } else {
+                      setAIError("No review generated. Try again.");
+                    }
+                  } catch (err) {
+                    setAIError("Failed to generate review. Try again.");
+                  }
+                  setAILoading(false);
+                }}
+                sx={{ mr: 1 }}
+              >
+                Generate Review
+              </Button>
+              <Button variant="text" onClick={() => { setShowAISuggestion(false); setAISummary(""); setAIError(null); }}>
+                Cancel
+              </Button>
+              {aiLoading && <LinearProgress sx={{ mt: 1 }} />}
+              {aiError && <Alert severity="error" sx={{ mt: 1 }}>{aiError}</Alert>}
+            </Box>
+          )}
+        </Box>
+        {/* End AI Suggestion Section */}
         <Box sx={{ mt: 2, mb: 1 }}>
           <Typography variant="subtitle1" sx={{ mb: 0.5 }}>Your Rating</Typography>
           <StarRating

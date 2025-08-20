@@ -326,7 +326,7 @@ router.post('/:id/replies', validateToken, async (req, res) => {
             return res.status(403).json({ message: 'Only admins can reply.' });
         }
         const reviewId = parseInt(req.params.id);
-        const { content } = req.body;
+        const { content, isAI } = req.body;
         if (!content || content.trim().length === 0) {
             return res.status(400).json({ message: 'Reply content cannot be empty.' });
         }
@@ -336,6 +336,7 @@ router.post('/:id/replies', validateToken, async (req, res) => {
             Content: content.trim(),
             ReplierID: req.user.id,
             PostDateTime: new Date(),
+            isAI: !!isAI
         });
 
         // Reload reply with Replier data

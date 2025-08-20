@@ -37,14 +37,14 @@ router.post('/review-suggestion', async (req, res) => {
     return res.status(400).json({ error: 'Summary is required.' });
   }
   try {
-    const prompt = `\n\nHuman: ${summary}\nWrite a helpful, relevant review for this. Limit your reply to about 50 words. Only output the review text. Do not include any introduction or explanation.\n\nAssistant:`;
+  const prompt = `\n\nHuman: You are an AI review generator for a website about account creation and user reviews. Your job is to write helpful, relevant, and concise reviews for this website.\nUser summary: ${summary}\nWrite a review for this website based on the summary above. Strictly limit your reply to 50 words or less. Do NOT write any introductory phrase, such as 'Here is a review', 'Review:', 'Here is a 50 word review based on the provided summary:', or anything similar. Only output the review text itself—no introduction, greeting, or explanation.\n\nAssistant:`;
     const input = {
       prompt,
       max_tokens_to_sample: 80,
       temperature: 0.7,
     };
     const command = new InvokeModelCommand({
-      modelId: 'anthropic.claude-v2', // Change to your desired Bedrock model
+      modelId: 'anthropic.claude-v2', 
       contentType: 'application/json',
       accept: 'application/json',
       body: JSON.stringify(input),
