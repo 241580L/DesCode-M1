@@ -177,6 +177,19 @@ router.get("/", validateToken, adminOnly, async (req, res) => {
   }
 });
 
+
+router.get("/:id", validateToken, adminOnly, async (req, res) => {
+  try {
+    const users = await User.findByPk(req.params.id, {
+      attributes: ['id', 'name', 'email', 'isAdmin', 'createdAt', 'updatedAt']
+    });
+    res.json(users);
+  } catch (err) {
+    wiz(err, "Error fetching user:\n");
+    res.status(500).json({ message: "Failed to fetch user." });
+  }
+});
+
 // PUT /user/:id - Update user by ID (admin only)
 router.put('/:id', validateToken, adminOnly, async (req, res) => {
   const { id } = req.params;
