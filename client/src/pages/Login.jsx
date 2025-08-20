@@ -1,14 +1,16 @@
 // client/src/pages/Login.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, TextField, Button, IconButton, InputAdornment, Link } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { ToastContainer, toast } from 'react-toastify';
+import useTitle from '../Title.jsx';
 import * as yup from 'yup';
 import http from '../http';
 
 function Login() {
+    useTitle("Login to Descode")
     const navigate = useNavigate();
     const location = useLocation();
     const params = new URLSearchParams(location.search);
@@ -53,7 +55,7 @@ function Login() {
     });
     return (
         <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Typography variant="h5" sx={{ my: 2 }}>Login</Typography>
+            <Typography variant="h4" sx={{ my: 2 }}>Login</Typography>
             <Box component="form" sx={{ maxWidth: '500px' }} onSubmit={formik.handleSubmit}>
                 <TextField
                     fullWidth margin="dense" autoComplete="off"

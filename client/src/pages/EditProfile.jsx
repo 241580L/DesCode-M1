@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import UserContext from '../contexts/UserContext';
 import http from '../http';
 import ConfirmModal from '../components/ConfirmModal';
+import useTitle from '../Title.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function EditProfile() {
@@ -18,7 +19,7 @@ export default function EditProfile() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  useTitle("Edit Profile")
 
   // Toast helper
   const showToast = (text, type) => {

@@ -1,14 +1,16 @@
 // client/src/pages/EditReview.jsx
 import React, { useEffect, useState, useContext } from 'react';
-import { Box, Typography, TextField, Button, CircularProgress, Alert } from '@mui/material';
+import { Box, Container, Typography, TextField, Button, CircularProgress, Alert } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import http from '../http';
 import UserContext from '../contexts/UserContext';
 import StarRating from '../components/StarRating';
+import useTitle from '../Title.jsx';
 
 function EditReview() {
+    useTitle("Edit Review")
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
@@ -79,8 +81,8 @@ function EditReview() {
     const isOwner = user && review?.reviewerId === user?.id;
 
     return (
-        <Box sx={{ mt: 4 }}>
-            <Typography variant="h5" sx={{ mb: 2 }}>
+        <Container sx={{mx:"auto"}}>
+            <Typography variant="h4" sx={{ mt: 2 }}>
                 {isOwner ? 'Edit Review' : 'View Review'}
             </Typography>
 
@@ -153,7 +155,7 @@ function EditReview() {
                     </Button>
                 )}
             </Box>
-        </Box>
+        </Container>
     );
 }
 

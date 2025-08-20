@@ -16,9 +16,11 @@ import {
     Select,
     MenuItem,
 } from '@mui/material';
+import useTitle from '../Title.jsx';
 import http from '../http';
 
 export default function ManageUsers() {
+    useTitle("Manage Users")
     const [users, setUsers] = useState([]);
     // store edited values per user id, initial undefined means no change
     const [editingUsers, setEditingUsers] = useState({});
@@ -139,8 +141,8 @@ export default function ManageUsers() {
     };
 
     return (
-        <Box sx={{ pt: 8 }}>
-            {/*<AdminNavbar />*/}
+        <Box>
+            <AdminNavbar />
             <Box maxWidth={900} margin="auto" sx={{ px: 2 }}>
                 <ToastContainer position="top-right" autoClose={3000} />
                 <Typography variant="h4" gutterBottom>

@@ -5,11 +5,13 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { ToastContainer, toast } from 'react-toastify';
+import useTitle from '../Title.jsx';
 import * as yup from 'yup';
 import http from '../http';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Register() {
+    useTitle("Register to DesCode")
     const navigate = useNavigate();
     const location=useLocation();
     const params=new URLSearchParams(location.search);
@@ -83,7 +85,7 @@ function Register() {
             flexDirection: 'column',
             alignItems: 'center'
         }}>
-            <Typography variant="h5" sx={{ my: 2 }}>
+            <Typography variant="h4" sx={{ my: 2 }}>
                 Register
             </Typography>
             <Box component="form" sx={{ maxWidth: '500px' }} onSubmit={formik.handleSubmit}>

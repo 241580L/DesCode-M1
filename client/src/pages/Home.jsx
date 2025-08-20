@@ -7,9 +7,11 @@ import { ToastContainer } from 'react-toastify';
 import UserContext from '../contexts/UserContext';
 import { useContext } from 'react';
 import Logo from '../assets/DesCodeFullLogo.svg'
+import useTitle from '../Title.jsx';
 
 function Home() {
     const { user } = useContext(UserContext);
+    useTitle("Descode Home Page")
     return (
         <Box
             sx={{
