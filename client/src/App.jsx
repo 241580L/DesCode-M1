@@ -7,10 +7,17 @@ import EditReview from './pages/EditReview';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import EditProfile from './pages/EditProfile';
+
 import AdminPage from './pages/Admin';
 import ManageUsers from './pages/ManageUsers';
+import ChatRoom from './pages/ChatRoom';
+import ChatList from './pages/ChatList';
+import COPList from './pages/COPList';
+import COPUpload from './pages/COPUpload';
+import COPView from './pages/COPView';
+
 import UserContext from './contexts/UserContext';
-import Logo from './assets/DesCodeFullLogoW.svg'
+import Logo from './assets/DesCodeFullLogoW.svg';
 import {
   Container,
   AppBar,
@@ -154,9 +161,12 @@ function App() {
                   variant="text"
                   sx={{ color: 'white', textTransform: 'none', fontWeight: 'bold', fontSize: 20 }}
                 >
-                  <Box sx={{ display: 'flex'}}x>
+                  <Box sx={{ display: 'flex'}}>
                     <img src={Logo} alt="Descode"/>
                   </Box>
+                </Button>
+                <Button component={Link} to="/chat" color="inherit">
+                  AI Checker
                 </Button>
                 <Button component={Link} to="/reviews" color="inherit">
                   Reviews
@@ -166,7 +176,7 @@ function App() {
               </Toolbar>
             </Container>
           </AppBar>
-          <Container>
+          <Box>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
@@ -179,8 +189,14 @@ function App() {
               <Route path="/edit-profile" element={<EditProfile />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/manage-users" element={<ManageUsers />} />
+              <Route path="/chat/:id" element={<ChatRoom />} />
+              <Route path="/chat" element={<ChatList />} />
+              <Route path="/cop" element={<COPList />} />
+              <Route path="/cop/upload" element={<COPUpload />} />
+              <Route path="/cop/:id" element={<COPView />} />
+              {/*^^ doubles as Edit/Replace page*/}
             </Routes>
-          </Container>
+          </Box>
         </ThemeProvider>
       </Router>
     </UserContext.Provider>
